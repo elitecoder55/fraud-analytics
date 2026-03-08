@@ -1,0 +1,18 @@
+# .NET
+backend/bin/
+backend/obj/
+backend/Migrations/
+
+# Python
+ml-service/.venv/
+ml-service/__pycache__/
+ml-service/models/__pycache__/
+ml-service/routers/__pycache__/
+
+# React
+frontend/node_modules/
+frontend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
