@@ -10,7 +10,7 @@ export default function App() {
   const [transactions, setTransactions] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [stats, setStats] = useState({ total: 0, flagged: 0, safe: 0, avgRisk: 0 });
-  const { connection, isConnected } = useSignalR("http://localhost:5000/hubs/transactions");
+  const { connection, isConnected } = useSignalR("https://fraudshield-api.onrender.com/hubs/transactions");
 
   useEffect(() => {
     if (!connection) return;

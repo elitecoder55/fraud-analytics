@@ -29,7 +29,9 @@ builder.Services.AddScoped<IFraudDetectionService, FraudDetectionService>();
 
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(
+    "http://localhost:5173",
+    "https://monumental-monstera-d5daf5.netlify.app")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials()));
