@@ -56,4 +56,10 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<TransactionHub>("/hubs/transactions");
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FraudDbContext>();
+    db.Database.Migrate();
+}
+
 app.Run();
