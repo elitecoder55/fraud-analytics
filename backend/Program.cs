@@ -11,8 +11,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<FraudDbContext>(options =>
     options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions => sqlOptions.EnableRetryOnFailure(3)));
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddSignalR();
 
@@ -20,7 +19,7 @@ builder.Services.AddHttpClient<IRiskScoringService, RiskScoringService>(client =
 {
     client.BaseAddress = new Uri(
         builder.Configuration["PythonService:BaseUrl"] ?? "http://localhost:8000");
-    client.Timeout = TimeSpan.FromMilliseconds(500);
+    client.Timeout = TimeSpan.FromMilliseconds(2000);
 });
 
 builder.Services.AddHostedService<TransactionIngestionWorker>();
@@ -30,8 +29,8 @@ builder.Services.AddScoped<IFraudDetectionService, FraudDetectionService>();
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
         policy.WithOrigins(
-    "http://localhost:5173",
-    "https://monumental-monstera-d5daf5.netlify.app")
+            "http://localhost:5173",
+            "https://monumental-monstera-d5daf5.netlify.app")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials()));
@@ -44,22 +43,12 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<TransactionHub>("/hubs/transactions");
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<FraudDbContext>();
-    db.Database.Migrate();
-}
 
 app.Run();
